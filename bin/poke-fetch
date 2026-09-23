@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+import subprocess
+import re
+import unicodedata
+import shutil
+
+def visible_width(s):
+    # Strip ANSI color codes
+    clean = re.sub(r"\x1b\[[0-9;]*[a-zA-Z]", "", s)
+    # Return terminal column width accounting for full-width icons
+    return sum(2 if unicodedata.east_asian_width(c) in ("F", "W") else 1 for c in clean)
+
+def main():
+    try:
+        # Run fastfetch for clean system details on the left
+        ff = subprocess.run(["fastfetch", "--pipe", "false"], capture_output=True, text=True)
+        sys_lines = ff.stdout.splitlines()
+
+        # Run pokemon-colorscripts for the sprite on the right
+        poke = subprocess.run(["pokemon-colorscripts", "-r", "--no-title"], capture_output=True, text=True)
+        poke_lines = poke.stdout.splitlines()
+
+        # Strip trailing blank lines
+        while sys_lines and not sys_lines[-1].strip():
+            sys_lines.pop()
+        while poke_lines and not poke_lines[-1].strip():
+            poke_lines.pop()
+
+        left_width = max((visible_width(line) for line in sys_lines), default=45)
+        right_width = max((visible_width(line) for line in poke_lines), default=30)
+        gap = "    "
+        gap_width = len(gap)
+
+        term_cols = shutil.get_terminal_size((100, 30)).columns
+
+        # If terminal is too narrow to fit side-by-side cleanly, display sequentially
+        if (left_width + gap_width + right_width) > term_cols:
+            for line in sys_lines:
+                print(line)
+            print()
+            for line in poke_lines:
+                print(line)
+            print()
+            return
+
+        max_lines = max(len(sys_lines), len(poke_lines))
+        for i in range(max_lines):
+            left = sys_lines[i] if i < len(sys_lines) else ""
+            right = poke_lines[i] if i < len(poke_lines) else ""
+            pad = " " * max(0, left_width - visible_width(left))
+            print(f"{left}{pad}{gap}{right}")
+        print()
+    except Exception:
+        # Fallback to standard pokemon colorscript if fastfetch has any issue
+        subprocess.run(["pokemon-colorscripts", "-r", "--no-title"])
+
+if __name__ == "__main__":
+    main()

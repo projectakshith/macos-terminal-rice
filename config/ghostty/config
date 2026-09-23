@@ -1,0 +1,33 @@
+# Font Configuration
+font-family = "JetBrainsMono Nerd Font"
+font-size = 15
+
+# Theme & Colors (Arch/Hyprland Aesthetic)
+theme = "Catppuccin Mocha"
+
+# Window Aesthetics & Blur (Glass effect)
+background-opacity = 0.85
+background-blur = true
+macos-titlebar-style = transparent
+window-padding-x = 14
+window-padding-y = 14
+window-padding-balance = true
+
+# Default Window Size (Clean Box)
+window-width = 110
+window-height = 32
+
+# Cursor
+cursor-style = bar
+cursor-style-blink = true
+
+# Interaction
+mouse-hide-while-typing = true
+
+# Global Hotkey (Summon Ghostty as a centered box from anywhere)
+keybind = global:ctrl+t=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-screen = main
+quick-terminal-animation-duration = 0.15
+quick-terminal-autohide = true
+initial-window = false
