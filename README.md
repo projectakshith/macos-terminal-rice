@@ -1,12 +1,16 @@
-# 🚀 macOS Hyprland-Style Terminal Rice
+# macOS Hyprland-Style Terminal Rice
 
 An automated, aesthetic terminal rice for macOS powered by **Ghostty**, **Starship**, **Fastfetch**, and modern CLI tools. 
 
 Takes any fresh Mac **from 0 to a fully customized Arch/Hyprland-inspired terminal** in one command.
 
+<img width="1280" height="832" alt="image" src="https://github.com/user-attachments/assets/090623d1-11cb-4cfa-9cb9-3bd205bb0237" />
+<img width="1710" height="1112" alt="image" src="https://github.com/user-attachments/assets/6aa4e532-4fe2-4f24-a349-72f424308de9" />
+
+
 ---
 
-## ✨ Features
+## Features
 
 * **Top Dropdown Terminal**: Press **`Control + T`** anywhere to smoothly drop down Ghostty from the top of your screen.
 * **Frosted Glass Blur**: Translucent blurred acrylic background (`0.85` opacity) in the Catppuccin Mocha theme.
@@ -17,7 +21,7 @@ Takes any fresh Mac **from 0 to a fully customized Arch/Hyprland-inspired termin
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before running the installer:
 
@@ -30,7 +34,7 @@ Before running the installer:
 
 ---
 
-## ⚡ 1-Step Installation
+## 1-Step Installation
 
 Clone this repository and run the installer:
 
@@ -46,7 +50,7 @@ cd mac-terminal-rice
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```text
 mac-terminal-rice/
@@ -64,7 +68,7 @@ mac-terminal-rice/
 
 ---
 
-## ⌨️ Cheatsheet & Keybindings
+## Cheatsheet & Keybindings
 
 | Key / Command | What it does |
 | :--- | :--- |
@@ -79,7 +83,7 @@ mac-terminal-rice/
 
 ---
 
-## 🛠️ Troubleshooting & FAQ
+## Troubleshooting & FAQ
 
 ### 1. `Control + T` does not open the terminal
 * **Cause**: macOS blocks third-party applications from listening to global hotkeys unless granted Accessibility permissions.
