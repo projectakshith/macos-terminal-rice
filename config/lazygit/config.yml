@@ -1,0 +1,30 @@
+gui:
+  nerdFontsVersion: "3"
+  border: "rounded"
+  showFileTree: true
+  showCommandLog: false
+  theme:
+    activeBorderColor:
+      - '#a6e3a1' # Green
+      - bold
+    inactiveBorderColor:
+      - '#a6adc8' # Subtext0
+    optionsTextColor:
+      - '#89b4fa' # Blue
+    selectedLineBgColor:
+      - '#313244' # Surface0
+    cherryPickedCommitBgColor:
+      - '#45475a' # Surface1
+    cherryPickedCommitFgColor:
+      - '#a6e3a1' # Green
+    unstagedChangesColor:
+      - '#f38ba8' # Red
+    defaultFgColor:
+      - '#cdd6f4' # Text
+    searchingActiveBorderColor:
+      - '#f9e2af' # Yellow
+
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never 2>/dev/null || cat
