@@ -18,8 +18,12 @@ window-width = 110
 window-height = 32
 
 # Cursor
-cursor-style = bar
+cursor-style = block
 cursor-style-blink = true
+
+# Custom Shader (Cursor Trail)
+custom-shader = shaders/cursor_tail.glsl
+custom-shader-animation = always
 
 # Interaction
 mouse-hide-while-typing = true
@@ -30,4 +34,3 @@ quick-terminal-position = top
 quick-terminal-screen = main
 quick-terminal-animation-duration = 0.15
 quick-terminal-autohide = true
-initial-window = false

@@ -201,6 +201,8 @@ mkdir -p "$HOME/.local/bin"
 
 if [ -f "$SCRIPT_DIR/config/ghostty/config" ]; then
   cp "$SCRIPT_DIR/config/ghostty/config" "$HOME/.config/ghostty/config"
+  mkdir -p "$HOME/.config/ghostty/shaders"
+  cp -r "$SCRIPT_DIR/config/ghostty/shaders/"* "$HOME/.config/ghostty/shaders/"
   cp "$SCRIPT_DIR/config/starship.toml" "$HOME/.config/starship.toml"
   cp "$SCRIPT_DIR/config/fastfetch/config.jsonc" "$HOME/.config/fastfetch/config.jsonc"
   cp "$SCRIPT_DIR/bin/poke-fetch" "$HOME/.local/bin/poke-fetch"
