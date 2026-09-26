@@ -4,7 +4,7 @@ vec3 sRGBToLinear(vec3 c) {
 }
 
 // --- CONFIGURATION ---
-vec4 TRAIL_COLOR = vec4(sRGBToLinear(iCurrentCursorColor.rgb), iCurrentCursorColor.a); // for custom color: vec4(0.2, 0.6, 1.0, 0.5); (wrap in sRGBToLinear for correct brightness)
+vec4 TRAIL_COLOR = vec4(sRGBToLinear(vec3(0.80, 0.65, 0.97)), 0.85); // Catppuccin Mauve (Neon Purple)
 const float DURATION = 0.09; // in seconds
 const float MAX_TRAIL_LENGTH = 0.2;
 const float THRESHOLD_MIN_DISTANCE = 0.0; // 0.0 to trigger trail on every keystroke
