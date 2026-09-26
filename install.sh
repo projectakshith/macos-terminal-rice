@@ -103,7 +103,7 @@ else
   echo -e "${GREEN}✔ font-jetbrains-mono-nerd-font already installed.${NC}"
 fi
 
-for pkg in starship fzf eza bat zoxide fastfetch; do
+for pkg in starship fzf eza bat zoxide fastfetch btop lazygit neovim tree-sitter-cli; do
   if ! brew list "$pkg" &>/dev/null; then
     echo -e "${BLUE}  -> Installing $pkg...${NC}"
     brew install "$pkg"
@@ -198,11 +198,19 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 mkdir -p "$HOME/.config/ghostty"
 mkdir -p "$HOME/.config/fastfetch"
 mkdir -p "$HOME/.local/bin"
+mkdir -p "$HOME/.config/btop"
+mkdir -p "$HOME/.config/lazygit"
+mkdir -p "$HOME/Library/Application Support/lazygit"
+mkdir -p "$HOME/.config/nvim"
 
 if [ -f "$SCRIPT_DIR/config/ghostty/config" ]; then
   cp "$SCRIPT_DIR/config/ghostty/config" "$HOME/.config/ghostty/config"
   mkdir -p "$HOME/.config/ghostty/shaders"
   cp -r "$SCRIPT_DIR/config/ghostty/shaders/"* "$HOME/.config/ghostty/shaders/"
+  cp -r "$SCRIPT_DIR/config/btop/"* "$HOME/.config/btop/"
+  cp -r "$SCRIPT_DIR/config/lazygit/"* "$HOME/.config/lazygit/"
+  ln -sf "$HOME/.config/lazygit/config.yml" "$HOME/Library/Application Support/lazygit/config.yml"
+  cp -r "$SCRIPT_DIR/config/nvim/"* "$HOME/.config/nvim/"
   cp "$SCRIPT_DIR/config/starship.toml" "$HOME/.config/starship.toml"
   cp "$SCRIPT_DIR/config/fastfetch/config.jsonc" "$HOME/.config/fastfetch/config.jsonc"
   cp "$SCRIPT_DIR/bin/poke-fetch" "$HOME/.local/bin/poke-fetch"
@@ -255,6 +263,11 @@ alias ll="eza -lh --icons --group-directories-first --git"
 alias la="eza -lah --icons --group-directories-first --git"
 alias lt="eza --tree --level=2 --icons"
 alias cat="bat --paging=never"
+alias v="nvim"
+alias vim="nvim"
+alias lg="lazygit"
+alias top="btop"
+export EDITOR="nvim"
 EOF
 fi
 
