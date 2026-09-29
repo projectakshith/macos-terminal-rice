@@ -23,44 +23,61 @@ Takes any fresh Mac **from 0 to a fully customized Arch/Hyprland-inspired termin
 
 ## Prerequisites
 
-Before running the installer:
-
 1. **macOS** (Compatible with Apple Silicon M1/M2/M3/M4/M5 and Intel x86_64).
-2. **[Ghostty](https://ghostty.org)**:
-   * Download and install the Ghostty terminal app: [https://ghostty.org](https://ghostty.org) (the installer will also attempt to install it via Homebrew).
-3. **Accessibility Permission (for the `Control + T` shortcut)**:
-   * Open **System Settings → Privacy & Security → Accessibility**.
-   * Toggle **Ghostty** to **ON** (required by macOS so Ghostty can listen for the global `Control + T` shortcut outside its window).
+2. **Administrator Privileges** (needed once during installation to configure Homebrew and `/usr/local/bin`).
+
+*(Everything else — **Ghostty**, JetBrainsMono Nerd Font, Oh My Zsh, Starship prompt, shaders, btop, lazygit, Neovim, and all configurations — is installed completely automatically by the script!)*
 
 ---
 
 ## 1-Step Installation
 
-Clone this repository and run the installer:
+Open Terminal and run this single command to clone and install:
 
 ```bash
-git clone https://github.com/your-username/mac-terminal-rice.git
-cd mac-terminal-rice
+git clone https://github.com/projectakshith/macos-terminal-rice.git && cd macos-terminal-rice && ./install.sh
+```
+
+Or step-by-step:
+
+```bash
+git clone https://github.com/projectakshith/macos-terminal-rice.git
+cd macos-terminal-rice
 ./install.sh
 ```
 
 > [!IMPORTANT]
 > **Admin Password Required:**
-> During step 7, the installer will display a clear banner asking for your Mac's administrator (`sudo`) password. This is required to create `/usr/local/bin` and install `pokemon-colorscripts`.
+> During the setup, the installer will display a clear banner asking for your Mac's administrator (`sudo`) password. This is required to create `/usr/local/bin` and install `pokemon-colorscripts`.
+
+---
+
+## Post-Installation Setup
+
+1. **Enable the Global Dropdown Shortcut (`Control + T`)**:
+   * Open **System Settings → Privacy & Security → Accessibility**.
+   * Toggle **Ghostty** to **ON** (required by macOS so Ghostty can listen for the global `Control + T` shortcut outside its window).
+2. **Launch Ghostty**:
+   * Open Ghostty from Spotlight (`Cmd + Space` → Ghostty) or Applications.
+   * Press **`Control + T`** anywhere on your Mac to toggle the dropdown terminal!
 
 ---
 
 ## Repository Structure
 
 ```text
-mac-terminal-rice/
-├── install.sh                  # Crash-proof automated installer with step tracking
+macos-terminal-rice/
+├── install.sh                  # Fully automated zero-to-hero installer
 ├── README.md                   # Setup guide and troubleshooting manual
 ├── bin/
 │   └── poke-fetch              # Python side-by-side specs + pokemon merger
 └── config/
     ├── ghostty/
-    │   └── config              # Ghostty theme, blur, padding, font 15, and hotkey
+    │   ├── config              # Ghostty theme, blur, padding, font 15, and hotkey
+    │   └── shaders/            # GPU GLSL cursor shaders (Neon Mauve cursor tail)
+    ├── btop/                   # btop Catppuccin Mocha theme & transparent glass config
+    ├── lazygit/                # lazygit Catppuccin Mocha theme with rounded borders
+    ├── nvim/                   # LazyVim setup with transparent Catppuccin Mocha
     ├── starship.toml           # Starship curved minimal prompt
     └── fastfetch/
         └── config.jsonc        # Fastfetch Catppuccin color scheme & modules
