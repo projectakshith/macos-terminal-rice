@@ -234,17 +234,30 @@ fi
 # Disable default Oh My Zsh theme to maximize Starship prompt speed
 perl -i -pe 's/^ZSH_THEME=.*/ZSH_THEME=""/' "$HOME/.zshrc" 2>/dev/null || true
 
-# Repair corrupted example format comment if a previous run matched it
-perl -i -0777 -pe 's/# Example format: plugins=\(\s*git\s*fzf-tab\s*zsh-autosuggestions\s*zsh-syntax-highlighting\s*\)/# Example format: plugins=(rails git textmate ruby lighthouse)/s' "$HOME/.zshrc" 2>/dev/null || true
+# Update plugins list in ~/.zshrc (heals any corrupted comments or stray parenthesis)
+python3 -c "
+import os, re
+zshrc = os.path.expanduser('~/.zshrc')
+if os.path.exists(zshrc):
+    with open(zshrc, 'r') as f:
+        content = f.read()
+    clean_plugins = '''# Which plugins would you like to load?
+# Standard plugins can be found in \$ZSH/plugins/
+# Custom plugins may be added to \$ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+  git
+  fzf-tab
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
 
-# Update plugins list in ~/.zshrc (strictly match un-commented plugins=(...), NOT comments)
-if ! grep -Eqs '^[[:space:]]*plugins=.*fzf-tab' "$HOME/.zshrc"; then
-  if grep -Eqs '^[[:space:]]*plugins=\(' "$HOME/.zshrc"; then
-    perl -i -0777 -pe 's/^[ \t]*plugins=\([^)]*\)/plugins=(\n  git\n  fzf-tab\n  zsh-autosuggestions\n  zsh-syntax-highlighting\n)/m' "$HOME/.zshrc" 2>/dev/null || true
-  else
-    echo -e '\nplugins=(\n  git\n  fzf-tab\n  zsh-autosuggestions\n  zsh-syntax-highlighting\n)' >> "$HOME/.zshrc"
-  fi
-fi
+source \$ZSH/oh-my-zsh.sh'''.replace(r'\$', '$')
+    content = re.sub(r'# Which plugins.*?source.*?oh-my-zsh\.sh', clean_plugins, content, flags=re.DOTALL)
+    with open(zshrc, 'w') as f:
+        f.write(content)
+" 2>/dev/null || true
 
 # Append custom startup hooks and aliases (only once)
 if ! grep -qs "poke-fetch" "$HOME/.zshrc"; then
