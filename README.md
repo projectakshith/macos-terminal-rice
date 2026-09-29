@@ -52,6 +52,21 @@ cd macos-terminal-rice
 
 ---
 
+### Clean / Fresh Install Mode
+
+If you ever want to perform a fresh reset (or if a shell config ever gets corrupted on any Mac), run:
+
+```bash
+./install.sh --clean
+```
+
+* 📦 Safely creates a timestamped backup of your current `~/.zshrc`.
+* 🔌 Freshly wipes and re-clones all Oh My Zsh plugins.
+* ✨ Writes a pristine, battle-tested `~/.zshrc` guaranteed to work with zero syntax errors.
+* 🚀 Re-deploys all latest configs (`ghostty`, `shaders`, `btop`, `lazygit`, `nvim`, `fastfetch`).
+
+---
+
 ## Post-Installation Setup
 
 1. **Enable the Global Dropdown Shortcut (`Control + T`)**:

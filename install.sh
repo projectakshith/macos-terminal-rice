@@ -18,6 +18,25 @@ NC='\033[0m'
 
 CURRENT_STEP="Initialization"
 
+CLEAN_MODE=false
+for arg in "$@"; do
+  case $arg in
+    --clean|-c)
+      CLEAN_MODE=true
+      shift
+      ;;
+    --help|-h)
+      echo "Usage: ./install.sh [OPTIONS]"
+      echo ""
+      echo "Options:"
+      echo "  --clean, -c    Clean/Fresh install. Backs up ~/.zshrc and regenerates"
+      echo "                 fresh configurations and plugins from scratch."
+      echo "  --help, -h     Show this help message."
+      exit 0
+      ;;
+  esac
+done
+
 # Error Trap with Helpful Troubleshooting Info
 catch_error() {
   local exit_code=$1
@@ -38,6 +57,10 @@ trap 'catch_error $? $LINENO' ERR
 echo -e "${PURPLE}┌────────────────────────────────────────────────────────┐${NC}"
 echo -e "${PURPLE}│    🚀 macOS Hyprland-Style Terminal Rice Installer     │${NC}"
 echo -e "${PURPLE}└────────────────────────────────────────────────────────┘${NC}\n"
+
+if [ "$CLEAN_MODE" = true ]; then
+  echo -e "${YELLOW}🧹 Clean Install Mode Enabled: Fresh configs & plugins will be generated.${NC}\n"
+fi
 
 # 0. Check OS
 CURRENT_STEP="Checking operating system"
@@ -136,6 +159,10 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 mkdir -p "$ZSH_CUSTOM/plugins"
 
 echo -e "${CYAN}🔌 Setting up Zsh plugins...${NC}"
+if [ "$CLEAN_MODE" = true ]; then
+  echo -e "${YELLOW}  -> Clean mode: Refreshing Zsh plugins...${NC}"
+  rm -rf "$ZSH_CUSTOM/plugins/zsh-autosuggestions" "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" "$ZSH_CUSTOM/plugins/fzf-tab"
+fi
 if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
   git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions" || {
     echo -e "${YELLOW}⚠️ Failed to clone zsh-autosuggestions. Check connection.${NC}"
@@ -226,16 +253,72 @@ fi
 CURRENT_STEP="Configuring ~/.zshrc"
 echo -e "${CYAN}⚙️ Configuring ~/.zshrc...${NC}"
 
-# Ensure PATH includes /usr/local/bin and ~/.local/bin
-if ! grep -qs 'export PATH="/usr/local/bin:$HOME/.local/bin:$PATH"' "$HOME/.zshrc"; then
-  echo 'export PATH="/usr/local/bin:$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc"
-fi
+if [ "$CLEAN_MODE" = true ]; then
+  if [ -f "$HOME/.zshrc" ]; then
+    BACKUP_FILE="$HOME/.zshrc.bak.$(date +%Y%m%d_%H%M%S)"
+    echo -e "${YELLOW}  -> Clean mode: Backing up current ~/.zshrc to ${BACKUP_FILE}...${NC}"
+    cp "$HOME/.zshrc" "$BACKUP_FILE"
+  fi
+  echo -e "${CYAN}✨ Writing fresh, pristine ~/.zshrc...${NC}"
+  cat << 'EOF' > "$HOME/.zshrc"
+# Path to your Oh My Zsh installation
+export ZSH="$HOME/.oh-my-zsh"
+
+# Ensure PATH includes Homebrew, /usr/local/bin and ~/.local/bin
+export PATH="/usr/local/bin:$HOME/.local/bin:$PATH"
 
 # Disable default Oh My Zsh theme to maximize Starship prompt speed
-perl -i -pe 's/^ZSH_THEME=.*/ZSH_THEME=""/' "$HOME/.zshrc" 2>/dev/null || true
+ZSH_THEME=""
 
-# Update plugins list in ~/.zshrc (heals any corrupted comments or stray parenthesis)
-python3 -c "
+# Oh My Zsh Plugins
+plugins=(
+  git
+  fzf-tab
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# Display system info + random pokemon side-by-side on launch
+poke-fetch
+
+# Initialize Starship prompt
+eval "$(starship init zsh)"
+
+# Initialize zoxide (smart cd)
+eval "$(zoxide init zsh)"
+
+# Initialize fzf keybindings & fuzzy completion
+source <(fzf --zsh)
+
+# fzf-tab interactive styling with eza previews
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
+
+# Modern CLI Replacements & Aliases
+alias ls="eza --icons --group-directories-first"
+alias ll="eza -lh --icons --group-directories-first --git"
+alias la="eza -lah --icons --group-directories-first --git"
+alias lt="eza --tree --level=2 --icons"
+alias cat="bat --paging=never"
+alias v="nvim"
+alias vim="nvim"
+alias lg="lazygit"
+alias top="btop"
+export EDITOR="nvim"
+EOF
+else
+  # Ensure PATH includes /usr/local/bin and ~/.local/bin
+  if ! grep -qs 'export PATH="/usr/local/bin:$HOME/.local/bin:$PATH"' "$HOME/.zshrc"; then
+    echo 'export PATH="/usr/local/bin:$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc"
+  fi
+
+  # Disable default Oh My Zsh theme to maximize Starship prompt speed
+  perl -i -pe 's/^ZSH_THEME=.*/ZSH_THEME=""/' "$HOME/.zshrc" 2>/dev/null || true
+
+  # Update plugins list in ~/.zshrc (heals any corrupted comments or stray parenthesis)
+  python3 -c "
 import os, re
 zshrc = os.path.expanduser('~/.zshrc')
 if os.path.exists(zshrc):
@@ -291,6 +374,7 @@ alias lg="lazygit"
 alias top="btop"
 export EDITOR="nvim"
 EOF
+  fi
 fi
 
 CURRENT_STEP="Finished"
